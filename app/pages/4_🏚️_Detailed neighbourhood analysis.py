@@ -1,4 +1,9 @@
-# basic map viz + emmas distance calc plotting goes in here
+# caro's plotting goes in here
+
+# select the mode of transportation -> get the right graph for the mode
+# select an amenity from preloaded list -> save in session state
+# select a neighborhood for closer analysis
+# get both in function
 
 import streamlit as st
 import pandas as pd
@@ -10,7 +15,7 @@ from tools.ui_utils import (
 add_logo()
 ui_setup()
 
-st.subheader("Map view of Montreal")
+st.subheader("Detailed neighbourhood analysis")
 st.write("Make your data input in the sidebar and wait for the analysis to run.")
 
 montreal_map = pd.DataFrame({
@@ -35,25 +40,3 @@ if start_button:
         
 
 st.sidebar.write("Choose different site options above.")
-
-
-
-
-
-# import json
-# with open("montreal_geojson.txt", "r") as file:
-#     montreal_geojson = json.load(file)
-# # GET TO KNOW HOW TO DISPLAY THIS IN STREAMLIT!!! ######################################
-# fig = px.choropleth(montreal_data,
-#                     geojson=montreal_geojson,
-#                     locations='District',  # This should match the IDs in your GeoJSON
-#                     color='Supermarkets',  # The DataFrame column you want to color by
-#                     featureidkey="properties.District",  # Path to the feature ID in the GeoJSON
-#                     projection="mercator",
-#                     title="Supermarkets in Montreal's Districts")
-
-# # Update the map's layout
-# fig.update_geos(fitbounds="locations", visible=False)
-# fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
-
-# st.pyplot(fig)

@@ -14,6 +14,10 @@ from tools.ui_utils import (
     ui_setup
 )
 
+from tools.ui_utils import (
+    plot_neighborhood_graph
+)
+
 add_logo()
 ui_setup()
 
@@ -58,6 +62,10 @@ if start_button:
         # map selected transportation to graph
         G = get_graph(st.session_state["mode_of_transportation"], st.session_state["neighbourhood"])
         
+        # THIS NEEDS TO BE REFINED
+        plot_neighborhood_graph(mode_of_transportation_graph=G, 
+                                mode_of_transportation_distances = "TO BE FILLED", 
+                                neighbourhood = st.session_state["neighbourhood"])
         
         import time
         time.sleep(10)

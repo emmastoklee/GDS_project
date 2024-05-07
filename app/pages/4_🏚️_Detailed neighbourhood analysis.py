@@ -14,7 +14,7 @@ from tools.ui_utils import (
     ui_setup
 )
 
-from tools.ui_utils import (
+from tools.utils import (
     plot_neighborhood_graph
 )
 

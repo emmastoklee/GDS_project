@@ -93,6 +93,6 @@ if start_button:
                                 amenity=st.session_state["amenity"]
                                 )
         
-        st.write("*Note: Nodes represent intersections of lanes (as stored in OpenStreetMap) and edges represent lanes/streets. Node colouring will always reflect a 0-15 minutes scale.*")
+        st.write("*Note 1: Nodes represent intersections of lanes (as stored in OpenStreetMap) and edges represent lanes/streets. Node colouring will always reflect a 0-15 minutes scale. And if nodes are coloured black, travel times exceed 15 minutes.*")
 
 st.sidebar.write("Choose different site options above.")

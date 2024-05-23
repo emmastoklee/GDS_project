@@ -52,7 +52,8 @@ def neighbourhood_map():
     
     fig = px.choropleth_mapbox(df2, geojson=df2.geometry.__geo_interface__, locations=df2.index, color="Arrondissement",
                             center={"lat": 45.55, "lon": -73.65},
-                            mapbox_style="carto-positron", zoom=10)
+                            mapbox_style="carto-positron", 
+                            zoom=9.4)
 
     fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
     st.plotly_chart(fig, use_container_width=True)
@@ -228,24 +229,40 @@ def amenity_distances_map():
     initial_category = categories[0]
     initial_category_df = cloropleth_gdf[cloropleth_gdf['Category'] == initial_category]
 
-    # plotting
+    # Create a custom colorscale
+    custom_colorscale = [
+        [0.0, "yellow"],  # Color for zero
+        [0.000001, "#440154"],  # Viridis scale starts
+        [0.1, "#482878"],
+        [0.2, "#3e4989"],
+        [0.3, "#31688e"],
+        [0.4, "#26838f"],
+        [0.5, "#1f9d8a"],
+        [0.6, "#6cce5a"],
+        [0.7, "#b6de2b"],
+        [0.8, "#fee825"],
+        [1.0, "#fdea45"]
+    ]
+
+    # Create choropleth map figure
     fig = go.Figure()
 
-    # initial choropleth map trace
+    # Add initial choropleth map trace
     fig.add_trace(go.Choroplethmapbox(
         geojson=initial_category_df.geometry.__geo_interface__,
         locations=initial_category_df.index,
         z=initial_category_df['Average Distance'],
-        colorscale='Viridis',
+        colorscale=custom_colorscale,
         colorbar=dict(title='Average Distance (m)'),
         marker_opacity=0.7,
         marker_line_width=0,
         text=initial_category_df['Neighbourhood'],
         hoverinfo='text+z',
         zmin=0,
-        zmax=5500 # legend values
+        zmax=5500  # Set the maximum value for the legend as there are 6 outliers about the distance
     ))
 
+    # Update layout
     fig.update_layout(
         title=f'Average Distance to Amenity in Montreal',
         mapbox=dict(
@@ -256,22 +273,22 @@ def amenity_distances_map():
         margin=dict(l=0, r=0, t=0, b=0),
     )
 
-    # dropdown menu
+    # Define dropdown menu
     dropdown_menu = []
     for category in categories:
         category_df = cloropleth_gdf[cloropleth_gdf['Category'] == category]
         dropdown_menu.append(
             dict(
                 args=[{'z': [category_df['Average Distance']],
-                    'text': [category_df['Neighbourhood']],
-                    'hoverinfo': 'text+z',
-                    'title': f'Average Distance to Centroid for {category} in Montreal'}],
+                        'text': [category_df['Neighbourhood']],
+                        'hoverinfo': 'text+z',
+                        'title': f'Average Distance to Centroid for {category} in Montreal'}],
                 label=category,
                 method='restyle'
             )
         )
 
-    # dropdown menu to the figure
+    # Add dropdown menu to the figure
     fig.update_layout(updatemenus=[dict(
         buttons=dropdown_menu,
         direction="down",
@@ -282,6 +299,60 @@ def amenity_distances_map():
         y=1.15,
         yanchor="top"
     )])
+    # # plotting
+    # fig = go.Figure()
+
+    # # initial choropleth map trace
+    # fig.add_trace(go.Choroplethmapbox(
+    #     geojson=initial_category_df.geometry.__geo_interface__,
+    #     locations=initial_category_df.index,
+    #     z=initial_category_df['Average Distance'],
+    #     colorscale='Viridis',
+    #     colorbar=dict(title='Average Distance (m)'),
+    #     marker_opacity=0.7,
+    #     marker_line_width=0,
+    #     text=initial_category_df['Neighbourhood'],
+    #     hoverinfo='text+z',
+    #     zmin=0,
+    #     zmax=5500 # legend values
+    # ))
+
+    # fig.update_layout(
+    #     title=f'Average Distance to Amenity in Montreal',
+    #     mapbox=dict(
+    #         style="carto-positron",
+    #         zoom=9.4,
+    #         center=dict(lat=45.55, lon=-73.6),
+    #     ),
+    #     margin=dict(l=0, r=0, t=0, b=0),
+    # )
+
+    # # dropdown menu
+    # dropdown_menu = []
+    # for category in categories:
+    #     category_df = cloropleth_gdf[cloropleth_gdf['Category'] == category]
+    #     dropdown_menu.append(
+    #         dict(
+    #             args=[{'z': [category_df['Average Distance']],
+    #                 'text': [category_df['Neighbourhood']],
+    #                 'hoverinfo': 'text+z',
+    #                 'title': f'Average Distance to Centroid for {category} in Montreal'}],
+    #             label=category,
+    #             method='restyle'
+    #         )
+    #     )
+
+    # # dropdown menu to the figure
+    # fig.update_layout(updatemenus=[dict(
+    #     buttons=dropdown_menu,
+    #     direction="down",
+    #     pad={"r": 10, "t": 10},
+    #     showactive=True,
+    #     x=0.95,  # Adjust the position to the right
+    #     xanchor="right",  # Align to the right
+    #     y=1.15,
+    #     yanchor="top"
+    # )])
 
     st.plotly_chart(fig, use_container_width=True)
 
